@@ -8,7 +8,7 @@ int servoPin = 8;                         //Servo motor pinini tanımlıyoruz.
 
 Servo motor;                              //Servo motor için değişken oluşturuyoruz.
 MFRC522 rfid(SS_PIN, RST_PIN);            //RC522 modülü ayarlarını yapıyoruz.
-byte ID[4] = {97, 76, 67, 9};          //Yetkili kart ID'sini tanımlıyoruz. 
+byte ID[4] = {243,192,149,6}, ID2[4] = {108,142,125,99};         //Yetkili kart ID'sini tanımlıyoruz. 
 
 void setup() { 
   motor.attach(servoPin);                 //Servo motor pinini motor değişkeni ile ilişkilendiriyoruz.
@@ -25,13 +25,14 @@ void loop() {
   if ( ! rfid.PICC_ReadCardSerial())      //Kart okunmadığı zaman bekliyoruz.
     return;
 
-  if (rfid.uid.uidByte[0] == ID[0] &&     //Okunan kart ID'si ile ID değişkenini karşılaştırıyoruz.
-    rfid.uid.uidByte[1] == ID[1] && 
-    rfid.uid.uidByte[2] == ID[2] && 
-    rfid.uid.uidByte[3] == ID[3] ) {
+    if( (rfid.uid.uidByte[0] == ID[0] && rfid.uid.uidByte[1] == ID[1] &&
+       rfid.uid.uidByte[2] == ID[2] && rfid.uid.uidByte[3] == ID[3]) ||
+       (rfid.uid.uidByte[0] == ID2[0] && rfid.uid.uidByte[1] == ID2[1] &&
+       rfid.uid.uidByte[2] == ID2[2] && rfid.uid.uidByte[3] == ID2[3])) //Okunan kart ID'si ile ID değişkenini karşılaştırıyoruz.
+    {
         Serial.println("Kapi acildi");
         ekranaYazdir();
-        motor.write(180);                 //Servo motoru 180 dereceye getiriyoruz.
+        motor.write(90);                 //Servo motoru 90 dereceye getiriyoruz.
         delay(3000);
         motor.write(0);                   //Servo motoru 0 dereceye getiriyoruz.
         delay(1000);
